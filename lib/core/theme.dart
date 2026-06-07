@@ -7,7 +7,7 @@ class AppColors {
   static const Color bg           = Color(0xFF0A0E1A);
   static const Color surface      = Color(0xFF0F1330);
   static const Color cardBg       = Color(0xFF141830);
-  static const Color inputBg      = Color(0x0FFFFFFF); // ~6% white
+  static const Color inputBg = Color(0x1AFFFFFF);
   static const Color border       = Color(0x1AFFFFFF); // ~10% white
   static const Color divider      = Color(0x0AFFFFFF); // ~4% white
 
