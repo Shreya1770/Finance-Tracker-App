@@ -188,6 +188,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           ),
                                         );
                                       }
+                                      
                                     } catch (e) {
                                       if (mounted) {
                                         ScaffoldMessenger.of(
