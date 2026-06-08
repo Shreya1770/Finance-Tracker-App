@@ -1,9 +1,7 @@
 import 'package:expense_tracker/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 final authServiceProvider=Provider<AuthService>((ref)=>AuthService());
 
