@@ -135,9 +135,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 if (value == null || value.isEmpty) {
                                   return "Enter Valid Password";
                                 }
-                                if (value.length < 8) {
-                                  return "Password Length Should not exceed 8 Characters";
-                                }
+                               
                                 return null;
                               },
                               controller: password,
@@ -166,6 +164,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           const SizedBox(height: 20),
                           ElevatedButton(
+                            
                             onPressed: isLoading
                                 ? null
                                 : () async {
@@ -221,15 +220,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: double.infinity,
                             height: 55,
                             child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(
-                                  color: AppColors.primary,
-                                  width: 2,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
+                              style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    disabledBackgroundColor:
+                        AppColors.primary.withOpacity(0.5),
+                    foregroundColor: AppColors.textPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                  ),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -241,9 +242,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               child: const Text(
                                 "Create Account",
                                 style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
+                                  fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.3,
                                 ),
                               ),
                             ),
@@ -253,15 +254,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: double.infinity,
                             height: 55,
                             child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(
-                                  color: AppColors.primary,
-                                  width: 2,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
+                             style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    disabledBackgroundColor:
+                        AppColors.primary.withOpacity(0.5),
+                    foregroundColor: AppColors.textPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                  ),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -273,9 +276,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               child: const Text(
                                 "Forget Password?",
                                 style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
+                                  fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.3,
                                 ),
                               ),
                             ),

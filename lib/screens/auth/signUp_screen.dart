@@ -318,15 +318,17 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       width: double.infinity,
                       height: 55,
                       child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(
-                            color: AppColors.primary,
-                            width: 2,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
+                        style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    disabledBackgroundColor:
+                        AppColors.primary.withOpacity(0.5),
+                    foregroundColor: AppColors.textPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                  ),
                         onPressed: loading
                             ? null
                             : () async {
@@ -367,9 +369,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             : const Text(
                                 "Create Account",
                                 style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
+                                  fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.3,
                                 ),
                               ),
                       ),
