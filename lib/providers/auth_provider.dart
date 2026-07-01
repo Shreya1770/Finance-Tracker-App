@@ -24,18 +24,22 @@ class AuthNotifier extends StateNotifier<bool>{
   }
 
   Future<void> signUp(
+    String name,
+    String? lastname,
     String email,
     String password,
     int phonenumber,
-    String? lastname,
+    
   )async{
     try{
       state=true;
     await authService.signUp(
+      name: name,
+      lastname: lastname,
       email: email,
        password: password,
         phonenumber: phonenumber,
-        lastname: lastname,
+        
         );
     }
     finally{

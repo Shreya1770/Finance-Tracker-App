@@ -34,7 +34,7 @@ class TransactionModel {
       'amount':amount,
       'type':type,
       'category':category,
-      'timestampe':Timestamp.fromDate(timestamp),
+      'timestamp':Timestamp.fromDate(timestamp),
     };
   }
 }

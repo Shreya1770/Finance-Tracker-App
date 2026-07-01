@@ -340,10 +340,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                   await ref
                                       .read(authProvider.notifier)
                                       .signUp(
+                                        nameController.text.trim(),
+                                        lastNameController.text.trim(),
                                         emailController.text.trim(),
                                         passwordController.text.trim(),
                                         int.parse(phoneController.text.trim()),
-                                        lastNameController.text.trim(),
+                                        
                                       );
           
                                   if (mounted) {
