@@ -22,10 +22,10 @@ class TransactionModel {
     return TransactionModel(id: 
     doc.id,
      title: data['title']??'', 
-     amount: (data['amount'] as num).toDouble(),
+     amount: (data['amount'] as num?)?.toDouble()??0.0,
      type: data['type']??'',
      category: data['category']??'',
-     timestamp: (data['timestamp'] as Timestamp).toDate());
+     timestamp: (data['timestamp'] as Timestamp?)?.toDate()??DateTime.now());
   }
 
   Map<String,dynamic> toMap(){
