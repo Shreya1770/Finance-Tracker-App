@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/theme.dart';
 import 'package:expense_tracker/screens/auth/forget_screen.dart';
 import 'package:expense_tracker/screens/auth/signUp_screen.dart';
+import 'package:expense_tracker/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -135,7 +136,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 if (value == null || value.isEmpty) {
                                   return "Enter Valid Password";
                                 }
-                               
+
                                 return null;
                               },
                               controller: password,
@@ -164,7 +165,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           const SizedBox(height: 20),
                           ElevatedButton(
-                            
                             onPressed: isLoading
                                 ? null
                                 : () async {
@@ -178,6 +178,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             email.text.trim(),
                                             password.text.trim(),
                                           );
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const HomeScreen(),
+                                        ),
+                                      );
                                       if (mounted) {
                                         ScaffoldMessenger.of(
                                           context,
@@ -187,7 +193,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           ),
                                         );
                                       }
-                                      
                                     } catch (e) {
                                       if (mounted) {
                                         ScaffoldMessenger.of(
@@ -221,16 +226,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             height: 55,
                             child: OutlinedButton(
                               style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    disabledBackgroundColor:
-                        AppColors.primary.withOpacity(0.5),
-                    foregroundColor: AppColors.textPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                    shadowColor: Colors.transparent,
-                  ),
+                                backgroundColor: AppColors.primary,
+                                disabledBackgroundColor: AppColors.primary
+                                    .withOpacity(0.5),
+                                foregroundColor: AppColors.textPrimary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                elevation: 0,
+                                shadowColor: Colors.transparent,
+                              ),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -243,8 +248,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 "Create Account",
                                 style: TextStyle(
                                   fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.3,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.3,
                                 ),
                               ),
                             ),
@@ -254,22 +259,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: double.infinity,
                             height: 55,
                             child: OutlinedButton(
-                             style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    disabledBackgroundColor:
-                        AppColors.primary.withOpacity(0.5),
-                    foregroundColor: AppColors.textPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                    shadowColor: Colors.transparent,
-                  ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                disabledBackgroundColor: AppColors.primary
+                                    .withOpacity(0.5),
+                                foregroundColor: AppColors.textPrimary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                elevation: 0,
+                                shadowColor: Colors.transparent,
+                              ),
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) =>ForgotPasswordScreen(),
+                                    builder: (_) => ForgotPasswordScreen(),
                                   ),
                                 );
                               },
@@ -277,8 +282,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 "Forget Password?",
                                 style: TextStyle(
                                   fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.3,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.3,
                                 ),
                               ),
                             ),

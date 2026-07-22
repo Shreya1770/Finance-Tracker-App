@@ -27,7 +27,7 @@ class FirestoreService {
     
   }
 
-  Future<void> updateTransaction(String uid,TransactionModel transaction)
+  Future<void> updateTransaction(String uid,String transactionId,TransactionModel transaction)
   async{
     await _firestore.collection('users')
     .doc(uid)
