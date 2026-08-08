@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/theme.dart';
 import 'package:expense_tracker/firebase_options.dart';
 import 'package:expense_tracker/screens/auth/login_screen.dart';
 import 'package:expense_tracker/screens/auth/signUp_screen.dart';
@@ -24,6 +25,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LoginScreen(),
+      themeMode: ThemeMode.dark,
+      darkTheme: AppTheme.dark,
     );
   }
 }

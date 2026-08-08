@@ -37,7 +37,7 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(transactionNotifierProvider);
     return AlertDialog(
-      backgroundColor:AppColors.dialogBg ,
+      // backgroundColor:AppColors.dialogBg ,
       title: const Text("Add Transaction"),
       content: SingleChildScrollView(
         child: Column(
@@ -47,7 +47,13 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog> {
               controller: _titleController,
               decoration: const InputDecoration(
                 labelText: "Title",
+                // labelStyle: TextStyle(
+                //   color: AppColors.textPrimary,
+                // ),                
                 hintText: "Enter Title",
+                // hintStyle: TextStyle(
+                //   color: AppColors.textMuted,
+                // ),
                 border: OutlineInputBorder(),
               ),
             ),
@@ -58,7 +64,13 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog> {
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: "Amount",
+                labelStyle: TextStyle(
+                  // color: AppColors.textPrimary,
+                ),
                 hintText: "Enter Amount",
+                hintStyle: TextStyle(
+                  // color: AppColors.textMuted,
+                ),
                 border: OutlineInputBorder(),
               ),
             ),
@@ -66,9 +78,14 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog> {
 
             DropdownButtonFormField<String>(
               value: _selectedCategory,
-              decoration: const InputDecoration(
+              
+              decoration: const InputDecoration(          
                 labelText: "Category",
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(
+                  // color: AppColors.textPrimary,
+                ),
+                border: OutlineInputBorder(
+              ),
               ),
               items: _categories.map((category) {
                 return DropdownMenuItem(value: category, child: Text(category));
@@ -108,7 +125,10 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog> {
                             });
                           },
                         ),
-                        const Text("Income"),
+                        const Text("Income",
+                        style: TextStyle(
+                          // color: AppColors.textPrimary,
+                        ),),
                       ],
                     ),
                   ),
@@ -133,7 +153,10 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog> {
                             });
                           },
                         ),
-                        const Text("Expense"),
+                        const Text("Expense",
+                        style: TextStyle(
+                          // color: AppColors.textPrimary,
+                        ),),
                       ],
                     ),
                   ),
@@ -148,7 +171,9 @@ class _AddTransactionDialogState extends ConsumerState<AddTransactionDialog> {
               subtitle: Text(
                 "${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}",
               ),
-              trailing: const Icon(Icons.calendar_today),
+              trailing: const Icon(Icons.calendar_today,
+              // color: AppColors.textPrimary,
+              ),
               onTap: () async {
                 final pickedDate = await showDatePicker(
                   context: context,
