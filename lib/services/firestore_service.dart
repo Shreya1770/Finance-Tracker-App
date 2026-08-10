@@ -45,5 +45,18 @@ class FirestoreService {
     .delete();
   }
 
+  Future<String?> getFirstName(String uid) async {
+  final doc = await _firestore
+      .collection('users')
+      .doc(uid)
+      .get();
+
+  if (doc.exists) {
+    return doc.data()?['firstname'] as String?;
+  }
+
+  return null;
+}
+
 
 }

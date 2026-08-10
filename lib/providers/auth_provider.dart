@@ -1,4 +1,5 @@
 import 'package:expense_tracker/services/auth_service.dart';
+import 'package:expense_tracker/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -65,4 +66,18 @@ class AuthNotifier extends StateNotifier<bool>{
   final authStateProvider=StreamProvider((ref){
     return FirebaseAuth.instance.authStateChanges();
   });
+
+  final firstNameProvider = FutureProvider<String?>((ref) async {
+  final authService = ref.read(authServiceProvider);
+
+  final user = authService.currentUser;
+
+  if (user == null) {
+    return null;
+  }
+
+  final firestoreService = FirestoreService();
+
+  return firestoreService.getFirstName(user.uid);
+});
   
