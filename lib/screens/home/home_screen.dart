@@ -1,9 +1,12 @@
 import 'package:expense_tracker/core/theme.dart';
+import 'package:expense_tracker/models/transaction_model.dart';
 import 'package:expense_tracker/providers/auth_provider.dart';
 import 'package:expense_tracker/providers/transaction_provider.dart';
 import 'package:expense_tracker/widgets/add_transaction_dialog.dart';
+import 'package:expense_tracker/widgets/edit_transaction_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -140,13 +143,13 @@ class HomeScreen extends ConsumerWidget {
                         "Recent Transactions",
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      if (transactions.isNotEmpty)
-                        TextButton(
-                          onPressed: () {
-                            // Implement see all action
-                          },
-                          child: const Text("See All"),
-                        ),
+                      // if (transactions.isNotEmpty)
+                      //   TextButton(
+                      //     onPressed: () {
+                      //       // Implement see all action
+                      //     },
+                      //     child: const Text("See All"),
+                      //   ),
                     ],
                   ),
                 ),
@@ -159,17 +162,66 @@ class HomeScreen extends ConsumerWidget {
               else
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
+
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final transaction = transactions[index];
+
                       final isIncome = transaction.type == "income";
 
-                      return _transactionTile(
-                        context,
-                        title: transaction.title,
-                        category: transaction.category,
-                        amount: transaction.amount,
-                        isIncome: isIncome,
+                      return Slidable(
+                        key: ValueKey(transaction.id),
+
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+
+                          children: [
+                            SlidableAction(
+                              onPressed: (context) {
+                                _showEditTransactionDialog(
+                                  context,
+                                  ref,
+                                  transaction,
+                                );
+                              },
+
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
+                              icon: Icons.edit_outlined,
+                              label: 'Edit',
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+
+                            SlidableAction(
+                              onPressed: (context) async {
+                                final uid = ref
+                                    .read(authServiceProvider)
+                                    .currentUser!
+                                    .uid;
+
+                                await ref
+                                    .read(transactionNotifierProvider.notifier)
+                                    .deleteTransactions(uid, transaction.id);
+                              },
+
+                              backgroundColor: AppColors.expense,
+                              foregroundColor: Colors.white,
+                              icon: Icons.delete_outline,
+                              label: 'Delete',
+
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ],
+                        ),
+
+                        child: _transactionTile(
+                          context,
+                          title: transaction.title,
+                          category: transaction.category,
+                          amount: transaction.amount,
+                          isIncome: isIncome,
+                          date: transaction.timestamp,
+                        ),
                       );
                     }, childCount: transactions.length),
                   ),
@@ -313,6 +365,7 @@ class HomeScreen extends ConsumerWidget {
     required String category,
     required double amount,
     required bool isIncome,
+    required DateTime date,
   }) {
     final color = isIncome ? AppColors.income : AppColors.expense;
 
@@ -338,11 +391,27 @@ class HomeScreen extends ConsumerWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        subtitle: Text(
-          category,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: AppColors.textMuted),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              category,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: AppColors.textMuted),
+            ),
+
+            const SizedBox(height: 2),
+
+            Text(
+              "${date.day.toString().padLeft(2, '0')}/"
+              "${date.month.toString().padLeft(2, '0')}/"
+              "${date.year}",
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.textMuted),
+            ),
+          ],
         ),
         trailing: Text(
           "${isIncome ? '+' : '-'} ₹${amount.toStringAsFixed(2)}",
@@ -385,6 +454,19 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showEditTransactionDialog(
+    BuildContext context,
+    WidgetRef ref,
+    TransactionModel transaction,
+  ) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return EditTransactionDialog(transaction: transaction);
+      },
     );
   }
 }

@@ -4,7 +4,6 @@ import 'package:expense_tracker/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// 1. Change to ConsumerStatefulWidget
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
