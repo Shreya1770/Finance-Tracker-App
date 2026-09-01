@@ -2,246 +2,293 @@ import 'package:expense_tracker/core/theme.dart';
 import 'package:expense_tracker/models/transaction_model.dart';
 import 'package:expense_tracker/providers/auth_provider.dart';
 import 'package:expense_tracker/providers/transaction_provider.dart';
+import 'package:expense_tracker/screens/analystics_screen.dart';
 import 'package:expense_tracker/widgets/add_transaction_dialog.dart';
 import 'package:expense_tracker/widgets/edit_transaction_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bg,
+
+
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [_buildHomeContent(context), const AnalyticsScreen()],
+      ),
+
+      floatingActionButton: _currentIndex == 0
+          ? FloatingActionButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => const AddTransactionDialog(),
+                );
+              },
+              child: const Icon(Icons.add, size: 30),
+            )
+          : null,
+
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+
+        onDestinationSelected: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+
+        backgroundColor: AppColors.surface,
+
+        indicatorColor: AppColors.primaryMuted,
+
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+
+            selectedIcon: Icon(Icons.home),
+            label: "Home",
+          ),
+
+          NavigationDestination(
+            icon: Icon(Icons.analytics_outlined),
+            selectedIcon: Icon(Icons.analytics),
+            label: "Analytics",
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHomeContent(BuildContext context) {
     final uid = ref.read(authServiceProvider).currentUser!.uid;
 
     final transactionsAsync = ref.watch(transactionStreamProvider(uid));
 
     final firstNameAsync = ref.watch(firstNameProvider);
 
-    return Scaffold(
-      backgroundColor: AppColors.bg,
+    return transactionsAsync.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: AppColors.primary),
+      ),
 
-      body: transactionsAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.primary),
+      error: (error, stack) => Center(
+        child: Text(
+          "Something went wrong:\n$error",
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: AppColors.expense),
         ),
+      ),
 
-        error: (error, stack) => Center(
-          child: Text(
-            "Something went wrong:\n$error",
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.expense),
-          ),
-        ),
+      data: (transactions) {
+        double totalIncome = 0;
+        double totalExpense = 0;
 
-        data: (transactions) {
-          double totalIncome = 0;
-          double totalExpense = 0;
-
-          for (final transaction in transactions) {
-            if (transaction.type == "income") {
-              totalIncome += transaction.amount;
-            } else if (transaction.type == "expense") {
-              totalExpense += transaction.amount;
-            }
+        for (final transaction in transactions) {
+          if (transaction.type == "income") {
+            totalIncome += transaction.amount;
+          } else if (transaction.type == "expense") {
+            totalExpense += transaction.amount;
           }
+        }
 
-          final balance = totalIncome - totalExpense;
+        final balance = totalIncome - totalExpense;
 
-          return CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    // 1. Top Gradient Background
-                    Container(
-                      height: 230,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        gradient: AppColors.accentGradient,
-                        borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(32),
-                        ),
-                      ),
-                      child: SafeArea(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 24, top: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              firstNameAsync.when(
-                                data: (firstName) {
-                                  return Text(
-                                    "Hey ${firstName ?? 'there'} 👋",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium
-                                        ?.copyWith(
-                                          color: Colors.white,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  );
-                                },
-
-                                loading: () {
-                                  return const Text(
-                                    "Hey there 👋",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                },
-
-                                error: (_, __) {
-                                  return const Text(
-                                    "Hey there 👋",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
+        return CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // 1. Top Gradient Background
+                  Container(
+                    height: 230,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      gradient: AppColors.accentGradient,
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(32),
                       ),
                     ),
-
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 145,
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: _balanceCard(
-                        context,
-                        balance,
-                        totalIncome,
-                        totalExpense,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SliverToBoxAdapter(child: SizedBox(height: 24)),
-
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                sliver: SliverToBoxAdapter(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Recent Transactions",
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      // if (transactions.isNotEmpty)
-                      //   TextButton(
-                      //     onPressed: () {
-                      //       // Implement see all action
-                      //     },
-                      //     child: const Text("See All"),
-                      //   ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SliverToBoxAdapter(child: SizedBox(height: 12)),
-
-              if (transactions.isEmpty)
-                SliverToBoxAdapter(child: _emptyTransactions(context))
-              else
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      final transaction = transactions[index];
-
-                      final isIncome = transaction.type == "income";
-
-                      return Slidable(
-                        key: ValueKey(transaction.id),
-
-                        endActionPane: ActionPane(
-                          motion: const ScrollMotion(),
-
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 24, top: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SlidableAction(
-                              onPressed: (context) {
-                                _showEditTransactionDialog(
-                                  context,
-                                  ref,
-                                  transaction,
+                            firstNameAsync.when(
+                              data: (firstName) {
+                                return Text(
+                                  "Hey ${firstName ?? 'there'} 👋",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium
+                                      ?.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 );
                               },
 
-                              backgroundColor: AppColors.primary,
-                              foregroundColor: Colors.white,
-                              icon: Icons.edit_outlined,
-                              label: 'Edit',
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-
-                            SlidableAction(
-                              onPressed: (context) async {
-                                final uid = ref
-                                    .read(authServiceProvider)
-                                    .currentUser!
-                                    .uid;
-
-                                await ref
-                                    .read(transactionNotifierProvider.notifier)
-                                    .deleteTransactions(uid, transaction.id);
+                              loading: () {
+                                return const Text(
+                                  "Hey there 👋",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
                               },
 
-                              backgroundColor: AppColors.expense,
-                              foregroundColor: Colors.white,
-                              icon: Icons.delete_outline,
-                              label: 'Delete',
-
-                              borderRadius: BorderRadius.circular(16),
+                              error: (_, __) {
+                                return const Text(
+                                  "Hey there 👋",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
-
-                        child: _transactionTile(
-                          context,
-                          title: transaction.title,
-                          category: transaction.category,
-                          amount: transaction.amount,
-                          isIncome: isIncome,
-                          date: transaction.timestamp,
-                        ),
-                      );
-                    }, childCount: transactions.length),
+                      ),
+                    ),
                   ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 145,
+                      left: 20,
+                      right: 20,
+                    ),
+                    child: _balanceCard(
+                      context,
+                      balance,
+                      totalIncome,
+                      totalExpense,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverToBoxAdapter(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Recent Transactions",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    // if (transactions.isNotEmpty)
+                    //   TextButton(
+                    //     onPressed: () {
+                    //       // Implement see all action
+                    //     },
+                    //     child: const Text("See All"),
+                    //   ),
+                  ],
                 ),
+              ),
+            ),
 
-              const SliverToBoxAdapter(child: SizedBox(height: 100)),
-            ],
-          );
-        },
-      ),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (_) => const AddTransactionDialog(),
-          );
-        },
-        child: const Icon(Icons.add, size: 30),
-      ),
+            if (transactions.isEmpty)
+              SliverToBoxAdapter(child: _emptyTransactions(context))
+            else
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final transaction = transactions[index];
+
+                    final isIncome = transaction.type == "income";
+
+                    return Slidable(
+                      key: ValueKey(transaction.id),
+
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              _showEditTransactionDialog(
+                                context,
+                                ref,
+                                transaction,
+                              );
+                            },
+
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            icon: Icons.edit_outlined,
+                            label: 'Edit',
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+
+                          SlidableAction(
+                            onPressed: (context) async {
+                              final uid = ref
+                                  .read(authServiceProvider)
+                                  .currentUser!
+                                  .uid;
+
+                              await ref
+                                  .read(transactionNotifierProvider.notifier)
+                                  .deleteTransactions(uid, transaction.id);
+                            },
+
+                            backgroundColor: AppColors.expense,
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete_outline,
+                            label: 'Delete',
+
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ],
+                      ),
+
+                      child: _transactionTile(
+                        context,
+                        title: transaction.title,
+                        category: transaction.category,
+                        amount: transaction.amount,
+                        isIncome: isIncome,
+                        date: transaction.timestamp,
+                      ),
+                    );
+                  }, childCount: transactions.length),
+                ),
+              ),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          ],
+        );
+      },
     );
   }
 

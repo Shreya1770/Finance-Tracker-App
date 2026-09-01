@@ -103,14 +103,40 @@ class AppTheme {
     ),
 
     // ── Bottom navigation (home screen tabs) ────
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: AppColors.navBarBg,
-      selectedItemColor: AppColors.navBarSelected,
-      unselectedItemColor: AppColors.navBarUnselected,
-      showUnselectedLabels: true,
-      type: BottomNavigationBarType.fixed,
-      elevation: 0,
-    ),
+    navigationBarTheme: NavigationBarThemeData(
+  backgroundColor: AppColors.surface,
+
+  indicatorColor: AppColors.primaryMuted,
+
+  iconTheme: WidgetStateProperty.resolveWith<IconThemeData>(
+    (states) {
+      if (states.contains(WidgetState.selected)) {
+        return const IconThemeData(
+          color: AppColors.primary,
+        );
+      }
+
+      return const IconThemeData(
+        color: AppColors.textMuted,
+      );
+    },
+  ),
+
+  labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
+    (states) {
+      if (states.contains(WidgetState.selected)) {
+        return const TextStyle(
+          color: AppColors.primary,
+          fontWeight: FontWeight.w600,
+        );
+      }
+
+      return const TextStyle(
+        color: AppColors.textMuted,
+      );
+    },
+  ),
+),
 
     // ── Floating Action Button (home screen "add") ─
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
