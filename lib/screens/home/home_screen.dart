@@ -3,6 +3,7 @@ import 'package:expense_tracker/models/transaction_model.dart';
 import 'package:expense_tracker/providers/auth_provider.dart';
 import 'package:expense_tracker/providers/transaction_provider.dart';
 import 'package:expense_tracker/screens/analystics_screen.dart';
+import 'package:expense_tracker/screens/budget_screen.dart';
 import 'package:expense_tracker/widgets/add_transaction_dialog.dart';
 import 'package:expense_tracker/widgets/edit_transaction_dialog.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
       body: IndexedStack(
         index: _currentIndex,
-        children: [_buildHomeContent(context), const AnalyticsScreen()],
+        children: [_buildHomeContent(context), const AnalyticsScreen(),
+        const BudgetScreen()],
       ),
 
       floatingActionButton: _currentIndex == 0
@@ -67,6 +69,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             icon: Icon(Icons.analytics_outlined),
             selectedIcon: Icon(Icons.analytics),
             label: "Analytics",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.account_balance_wallet),
+            selectedIcon: Icon(Icons.account_balance_wallet),
+            label: "Budget",
           ),
         ],
       ),
