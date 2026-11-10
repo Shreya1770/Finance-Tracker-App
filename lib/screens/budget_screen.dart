@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/theme.dart';
 import 'package:expense_tracker/providers/auth_provider.dart';
 import 'package:expense_tracker/providers/budget_provider.dart';
+import 'package:expense_tracker/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,10 @@ class BudgetScreen extends ConsumerWidget {
     final budgetsAsync = ref.watch(
       budgetStreamProvider(uid),
     );
+
+    final transactionsAsync = ref.watch(
+  transactionStreamProvider(uid),
+);
 
     return Scaffold(
       backgroundColor: AppColors.bg,
