@@ -4,6 +4,7 @@ import 'package:expense_tracker/providers/auth_provider.dart';
 import 'package:expense_tracker/providers/transaction_provider.dart';
 import 'package:expense_tracker/screens/analystics_screen.dart';
 import 'package:expense_tracker/screens/budget_screen.dart';
+import 'package:expense_tracker/widgets/add_budget_dialog.dart';
 import 'package:expense_tracker/widgets/add_transaction_dialog.dart';
 import 'package:expense_tracker/widgets/edit_transaction_dialog.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               },
               child: const Icon(Icons.add, size: 30),
             )
-          : null,
+          : _currentIndex == 2
+              ? FloatingActionButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const AddBudgetDialog(),
+                    );
+                  },
+                  child: const Icon(Icons.add, size: 30),
+                )
+              : null,
 
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,

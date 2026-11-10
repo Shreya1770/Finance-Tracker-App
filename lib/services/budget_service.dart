@@ -28,11 +28,11 @@ class BudgetService {
       });
 }
 
-Future<void> updateBudget(String uid,String budgetsId,BudgetModel budget)async{
+Future<void> updateBudget(String uid, String budgetId, BudgetModel budget) async {
   await _firestore.collection('users')
   .doc(uid)
   .collection('budgets')
-  .doc(budgetsId)
+  .doc(budgetId)
   .update(budget.toMap());
 }
 
