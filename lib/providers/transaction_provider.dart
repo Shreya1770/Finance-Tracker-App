@@ -3,8 +3,6 @@ import 'package:expense_tracker/repositories/transaction_repository.dart';
 import 'package:expense_tracker/services/firestore_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:state_notifier/state_notifier.dart';
-
 
 class TransactionNotifier extends StateNotifier<bool>{
   final TransactionRepository _repository;

@@ -174,7 +174,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           .entries
                           .map((entry) {
                             final index = entry.key;
-                            final category = entry.value.key;
                             final amount = entry.value.value;
 
                             final percentage = (amount / totalExpense) * 100;
