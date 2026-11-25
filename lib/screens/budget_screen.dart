@@ -162,18 +162,16 @@ class _BudgetScreenState extends ConsumerState<BudgetScreen> {
       backgroundColor: AppColors.bg,
       appBar: AppBar(
         title: const Text('Budget Management'),
-        actions: [
-          IconButton(
-            tooltip: 'Add Budget',
-            icon: const Icon(Icons.add_circle_outline, size: 26),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (_) => AddBudgetDialog(initialMonth: _currentMonthKey),
-              );
-            },
-          ),
-        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Add Budget',
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (_) => AddBudgetDialog(initialMonth: _currentMonthKey),
+          );
+        },
+        child: const Icon(Icons.add, size: 28),
       ),
       body: budgetsAsync.when(
         loading: () => const Center(
