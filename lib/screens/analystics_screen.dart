@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/theme.dart';
 import 'package:expense_tracker/models/transaction_model.dart';
 import 'package:expense_tracker/providers/auth_provider.dart';
 import 'package:expense_tracker/providers/transaction_provider.dart';
+import 'package:expense_tracker/widgets/export_statement_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -56,7 +57,20 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     final transactionsAsync = ref.watch(transactionStreamProvider(uid));
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Analytics")),
+      appBar: AppBar(
+        title: const Text("Analytics"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf_outlined),
+            tooltip: "Export Statement",
+            onPressed: () {
+              transactionsAsync.whenData((transactions) {
+                ExportStatementDialog.show(context, transactions: transactions);
+              });
+            },
+          ),
+        ],
+      ),
 
       body: transactionsAsync.when(
         loading: () => const Center(

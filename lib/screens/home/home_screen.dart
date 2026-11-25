@@ -10,6 +10,7 @@ import 'package:expense_tracker/screens/budget_screen.dart';
 import 'package:expense_tracker/widgets/add_budget_dialog.dart';
 import 'package:expense_tracker/widgets/add_transaction_dialog.dart';
 import 'package:expense_tracker/widgets/edit_transaction_dialog.dart';
+import 'package:expense_tracker/widgets/export_statement_dialog.dart';
 import 'package:expense_tracker/widgets/transaction_filter_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -208,6 +209,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   );
                                 },
                               ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.file_download_outlined, color: Colors.white),
+                              tooltip: "Export Statement",
+                              onPressed: () {
+                                ExportStatementDialog.show(
+                                  context,
+                                  transactions: transactions,
+                                );
+                              },
                             ),
                             IconButton(
                               icon: const Icon(Icons.logout_rounded, color: Colors.white),
